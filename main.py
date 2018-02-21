@@ -23,7 +23,10 @@ def clean_text(data):
     res = []
     for i in data:
         if not i in set('!@#$%^&*()_+}{[]?.,/-\"'):
-            res.append(i)
+            if(i == '\n'):
+                res.append(' ')
+            else:
+                res.append(i)
     
     res = "".join(res)
     res = res.decode('utf-8').lower()
@@ -170,15 +173,15 @@ def get_unknown_words(res):
 
     
 def get_omon_max(dict2):
-    answ = 0
-    result = ''
+
+    res = []
     for i in dict2.keys():
-        if(len(str(morph.parse(i))) > 1):
-            if(dict2[i] > answ):
-                answ = dict2[i]
-                
-                result = i 
-    return result, answ
+        word = morph.parse(i)
+        if(len(word) > 1):
+            res.append((i, dict2[i]))
+            
+    res.sort(key = lambda w: w[1], reverse = True)
+    return res
     
 
 def main_job():
@@ -198,7 +201,10 @@ def main_job():
     
     
     my_dict2 = lemming(res)
-    my_list2 = get_list(my_dict1)  
+    my_list2 = get_list(my_dict2)  
+    
+    my_list2.sort(key = lambda w: w[1], reverse = True)
+    
     
     print(len(res.split(' '))) #общее число словоупотреблений
     print(get_unique_words(my_dict1)) #число уникальных словоформ
@@ -224,6 +230,8 @@ def main_job():
     
     print df[0].mean()
     print df[0].max()
+    
+    list_of_freq = (get_omon_max(my_dict2)) #самый частотный омоним
     
     
    
