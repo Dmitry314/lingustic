@@ -136,9 +136,10 @@ def get_omonims_number(res):
     
     n = 0
     for i in tmp:
-        word = morph.parse(i)
-        if(len(word) > 1):
-            n+=1
+        if (i != ''):
+            word = morph.parse(i)
+            if(len(word) > 1):
+                n+=1
         
     
     return n, len(tmp)
@@ -188,7 +189,7 @@ def main_job():
     list_of_books = ['berdaev.txt', 'game_of_biser.txt', 'head_of_douel.txt',
                      'humor.txt', 'kristi_dog_which_does_not_bark.txt', 
                      'nauchpop.txt', 'war_and_peace.txt']
-    position = 3
+    position = 1
     data = get_one_text(list_of_books[position])
     res = clean_text(data)
     
@@ -206,14 +207,17 @@ def main_job():
     my_list2.sort(key = lambda w: w[1], reverse = True)
     
     
-    print(len(res.split(' '))) #общее число словоупотреблений
+    total_words = 0
+    for i in my_dict1.keys():
+        total_words +=  my_dict1[i]
+    print(total_words)   #общее число словоупотреблений
     print(get_unique_words(my_dict1)) #число уникальных словоформ
     print(get_unique_words(my_dict2)) #число уникальных лемм
     
-    print float(get_unique_words(my_dict2))/len(res.split(' ')) #отношение числа уникальных лемм ко всему
+    print float(get_unique_words(my_dict2))/total_words #отношение числа уникальных лемм ко всему
     
     
-    plot_dist_of_words(my_list) #распределение по частоте употребления
+
     
     unknown_words = get_unknown_words(res) #неизвестные слова
     z = 0
@@ -225,8 +229,7 @@ def main_job():
     print(len(unknown_words))
     
     df = get_omonims_number_dist(res) #распределение омонимов по частотам
-    n_omon, n_total = get_omonims_number(res)
-    print((n_omon + 0.1)/n_total) # доля омонимов в тексте
+   
     
     print df[0].mean()
     print df[0].max()
@@ -236,12 +239,21 @@ def main_job():
     
    
     
-
+    for i in  list_of_freq[:10]:
+        print(i[0])
+        
+    for i in  list_of_freq[:10]:
+        print(i[1])
+    
+    for i in my_list2[:14]:
+        print i[0]
+    
+    n_omon, n_total = get_omonims_number(res)
+    
+    print((n_omon + 0.1)/n_total) # доля омонимов в тексте
     
     
-    
-
-
-
+    get_omonims_number_dist(res)
+    plot_dist_of_words(my_list2)
 
 
