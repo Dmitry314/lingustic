@@ -317,28 +317,113 @@ def get_chain_prob_smooth(text, dict_of_all_words, dict_of_bi_grams, num_of_word
 
 
 
-
-
-
-my_list = ['the united states has', 'accused japan of reneging on the', 
-'semiconductor pact by failing',  'to stop the flow', 'of cutprice japanese chips',  
-'to asian markets', 'washington has threatened to']
-
-for i in my_list:
-    print(i)
-    print(get_chain_prob_not_smooth(i, dictonary_of_all_words,  total_answer, 
-                         number_of_words ))
-
-
-
+def do_job_for_report():
     
-my_list_2 = ['foreign governments nokia',  'multilateral organisations nokia',
-             'but he added nokia',  'that the suspension nokia', 'of payments to private nokia']
-
-for i in my_list_2:
-    print(i)
-    print(get_chain_prob_smooth(i, dictonary_of_all_words,  total_answer, 
-                         number_of_words ))
+    
+    my_list = ['the united states has', 'accused japan of reneging on the', 
+    'semiconductor pact by failing',  'to stop the flow', 'of cutprice japanese chips',  
+    'to asian markets', 'washington has threatened to']
+    
+    for i in my_list:
+        print(i)
+        print(get_chain_prob_not_smooth(i, dictonary_of_all_words,  total_answer, 
+                             number_of_words ))
+    
+    
+    
+        
+    my_list_2 = ['foreign governments nokia',  'multilateral organisations nokia',
+                 'but he added nokia',  'that the suspension nokia', 'of payments to private nokia']
+    
+    for i in my_list_2:
+        print(i)
+        print(get_chain_prob_smooth(i, dictonary_of_all_words,  total_answer, 
+                             number_of_words ))
 
  
+
+def get_bi_grams_simple():
     
+    list_of_books = ['berdaev.txt', 'game_of_biser.txt', 'head_of_douel.txt',
+                     'humor.txt', 'kristi_dog_which_does_not_bark.txt', 
+                     'nauchpop.txt', 'war_and_peace.txt']
+    position = 1
+    
+    data = get_one_text(list_of_books[position])
+    res = clean_text(data)
+    lbg = get_bi_grams(res)
+    ltg = get_tri_grams(res)
+    return lbg, tbg
+
+from copy import deepcopy
+
+def generate_bred(start_word, dict_of_bi_grams, number_of_words = 10):
+    answer = []
+    answer.append(start_word)
+    current = start_word
+    for i in tqdm(range(number_of_words)):
+        tmp =  []
+        prob = []
+        tmp2 = []
+        norm = 0
+        for j in dict_of_bi_grams.keys():
+            if(j.split(' ')[0] == current):
+                tmp2.append((j, dict_of_bi_grams[j]))
+                norm += dict_of_bi_grams[j]
+        
+        for j in range(0, len(tmp2)):
+            tmp.append(tmp2[j][0].split(' ')[1])
+            prob.append(float(tmp2[j][1]) / norm)
+        
+        an = np.random.choice(tmp, p = prob)
+        answer.append(an)
+        current = an
+    return answer
+
+
+def generate_bred_tri(start_word, second_start_word, dict_of_tri_grams, number_of_words = 10):
+    answer = []
+    answer.append(start_word)
+    answer.append(second_start_word)
+    current1 = start_word
+    current2 = second_start_word
+    for i in tqdm(range(number_of_words)):
+        tmp =  []
+        prob = []
+        tmp2 = []
+        norm = 0
+        for j in dict_of_tri_grams.keys():
+            if(j.split(' ')[0] == current1 and j.split(' ')[1] == current2):
+                tmp2.append((j, dict_of_tri_grams[j]))
+                norm += dict_of_tri_grams[j]
+        
+        for j in range(0, len(tmp2)):
+            tmp.append(tmp2[j][0].split(' ')[2])
+            prob.append(float(tmp2[j][1]) / norm)
+        
+        an = np.random.choice(tmp, p = prob)
+        answer.append(an)
+        current1 = current2
+        current2 = an
+    return answer
+
+bred = generate_bred_tri(u'на', u'каждые', ltg, 100)
+
+
+start_word = u'он'
+dict_of_bi_grams = lbg
+i = 0
+
+                
+                
+        
+        
+        
+        
+        
+        
+        
+            
+    
+    
+
