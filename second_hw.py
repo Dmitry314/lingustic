@@ -145,7 +145,7 @@ def get_num_of_words(res):
     for i in tmp:
         if(i !=''):
            n+=1
-        return n
+    return n
 
 
 def get_bi_grams(res):
@@ -215,30 +215,101 @@ def  get_reuturs_data(num = 15):
     
     base_filename = 'reuters/reut2-0'
     total_answer = {}
+    number_of_words = 0
+    dictonary_of_all_words = {}
+    
     for i in tqdm(range(2, num)):
         if(i < 10):
             filename = base_filename + '0' + str(i) + '.sgm'
         else:
             filename = base_filename + str(i) + '.sgm'
         data = get_one_text(filename)
+        
         res = clean_text(data)
+        number_of_words += get_num_of_words(res)
         
         answer = get_bi_grams(res)
+        dictonary_of_one_dataset = get_dict(res)
+        
+        for i in dictonary_of_one_dataset.keys():
+             if(dictonary_of_all_words.get(i, -1) == -1):
+                dictonary_of_all_words[i] = dictonary_of_one_dataset[i]
+             else:
+                dictonary_of_all_words[i] += dictonary_of_one_dataset[i]
+        
+        '''
+        This function is awful and must be rewritten
+        '''        
+        
+        
+        
         for i in answer.keys():
             if(total_answer.get(i, -1) == -1):
                 total_answer[i] = answer[i]
             else:
                 total_answer[i] += answer[i]
                 
-    most_bi_grams = get_most_bi_grams(total_answer)
+
+    return total_answer, number_of_words, dictonary_of_all_words 
+
+
+total_answer, number_of_words, dictonary_of_all_words = get_reuturs_data()
+
+def get_word2Iword1_not_smooth(word1, word2, dict_of_bi_grams):
+    
+    a = 0
+    b = 0
+    
+    for i in dict_of_bi_grams.keys():
+        if (i.split(' ')[0] == word1):
+            a+=1
         
+        
+        if (i.split(' ')[0] == word1 and i.split(' ')[1] == word2):
+            b+=1
+    
+    return float(b) / a
 
-def get_dict_contained_word(total_answer, word):
-    for key in total_answer.keys
+
+def get_word2Iword1_smooth(word1, word2, dict_of_bi_grams, num_of_words):
+    
+    a = 0
+    b = 0
+    
+    for i in dict_of_bi_grams.keys():
+        if (i.split(' ')[0] == word1):
+            a+=1
+        
+        
+        if (i.split(' ')[0] == word1 and i.split(' ')[1] == word2):
+            b+=1
+    
+    return float(b + 1)/(a + num_of_words)    
 
 
 
- 
+
+def get_probab_of_word(word, dict_of_all_words,  num_of_words):
+    return float(dict_of_all_words[word]) / num_of_words
+
+
+def get_chain_prob_not_smoth(text, dict_of_all_words, dict_of_bi_grams, num_of_words):
+    tmp = text.split(' ')
+    
+    answer = get_probab_of_word(tmp[0], dict_of_all_words, num_of_words )
+    
+    for i in range(1, len(tmp)):
+        print(i, answer)
+        answer = answer * get_word2Iword1_not_smooth(tmp[i-1], tmp[i], dict_of_bi_grams)
+        
+    return answer
+
+
+get_chain_prob_not_smoth('said its', dictonary_of_all_words,  total_answer, 
+                         number_of_words )
+
+
+
     
 
 
