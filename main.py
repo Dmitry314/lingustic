@@ -189,7 +189,7 @@ def main_job():
     list_of_books = ['berdaev.txt', 'game_of_biser.txt', 'head_of_douel.txt',
                      'humor.txt', 'kristi_dog_which_does_not_bark.txt', 
                      'nauchpop.txt', 'war_and_peace.txt']
-    position = 1
+    position = 0
     data = get_one_text(list_of_books[position])
     res = clean_text(data)
     

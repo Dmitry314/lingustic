@@ -293,25 +293,52 @@ def get_probab_of_word(word, dict_of_all_words,  num_of_words):
     return float(dict_of_all_words[word]) / num_of_words
 
 
-def get_chain_prob_not_smoth(text, dict_of_all_words, dict_of_bi_grams, num_of_words):
+def get_chain_prob_not_smooth(text, dict_of_all_words, dict_of_bi_grams, num_of_words):
     tmp = text.split(' ')
     
     answer = get_probab_of_word(tmp[0], dict_of_all_words, num_of_words )
     
     for i in range(1, len(tmp)):
-        print(i, answer)
+        
         answer = answer * get_word2Iword1_not_smooth(tmp[i-1], tmp[i], dict_of_bi_grams)
         
     return answer
 
+def get_chain_prob_smooth(text, dict_of_all_words, dict_of_bi_grams, num_of_words):
+    tmp = text.split(' ')
+    
+    answer = get_probab_of_word(tmp[0], dict_of_all_words, num_of_words )
+    
+    for i in range(1, len(tmp)):
+        
+        answer = answer * get_word2Iword1_smooth(tmp[i-1], tmp[i], dict_of_bi_grams, number_of_words)
+        
+    return answer
 
-get_chain_prob_not_smoth('said its', dictonary_of_all_words,  total_answer, 
-                         number_of_words )
+
+
+
+
+
+my_list = ['the united states has', 'accused japan of reneging on the', 
+'semiconductor pact by failing',  'to stop the flow', 'of cutprice japanese chips',  
+'to asian markets', 'washington has threatened to']
+
+for i in my_list:
+    print(i)
+    print(get_chain_prob_not_smooth(i, dictonary_of_all_words,  total_answer, 
+                         number_of_words ))
 
 
 
     
+my_list_2 = ['foreign governments nokia',  'multilateral organisations nokia',
+             'but he added nokia',  'that the suspension nokia', 'of payments to private nokia']
 
+for i in my_list_2:
+    print(i)
+    print(get_chain_prob_smooth(i, dictonary_of_all_words,  total_answer, 
+                         number_of_words ))
 
-
+ 
     
