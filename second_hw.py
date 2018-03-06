@@ -424,10 +424,12 @@ def generate_bred_tri(start_word, second_start_word, dict_of_tri_grams, number_o
         current2 = an
     return answer
 
+do_job_for_report()
+
+lbg, ltg = get_bi_grams_simple()
 bred = generate_bred_tri(u'глубину', u'эту', ltg, 100)
+print(" ".join(bred))
 
-
-start_word = u'он'
 dict_of_bi_grams = lbg
 i = 0
 
