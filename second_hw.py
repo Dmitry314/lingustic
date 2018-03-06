@@ -154,6 +154,9 @@ def get_bi_grams(res):
     clean_tmp  = []
     answer = {}
     
+
+    
+    
     for i in range(0, len(tmp)):
         if(tmp[i] != ''):
             clean_tmp.append(tmp[i])
@@ -253,7 +256,7 @@ def  get_reuturs_data(num = 15):
     return total_answer, number_of_words, dictonary_of_all_words 
 
 
-total_answer, number_of_words, dictonary_of_all_words = get_reuturs_data()
+
 
 def get_word2Iword1_not_smooth(word1, word2, dict_of_bi_grams):
     
@@ -315,31 +318,42 @@ def get_chain_prob_smooth(text, dict_of_all_words, dict_of_bi_grams, num_of_word
         
     return answer
 
-
+from numpy import roots
+def get_perpleksia(n, num_of_words):
+    return float(1)/(n**(float(1)/num_of_words))
 
 def do_job_for_report():
     
+    total_answer, number_of_words, dictonary_of_all_words = get_reuturs_data()
     
+    most_bi_grams = get_most_bi_grams(total_answer)
     my_list = ['the united states has', 'accused japan of reneging on the', 
     'semiconductor pact by failing',  'to stop the flow', 'of cutprice japanese chips',  
     'to asian markets', 'washington has threatened to']
     
     for i in my_list:
         print(i)
-        print(get_chain_prob_not_smooth(i, dictonary_of_all_words,  total_answer, 
-                             number_of_words ))
+        prob = get_chain_prob_not_smooth(i, dictonary_of_all_words,  total_answer, 
+                             number_of_words )
+        print('probability: ', prob,  ' perpleksia: ', get_perpleksia(prob, len(i)))
+  
     
     
     
-        
-    my_list_2 = ['foreign governments nokia',  'multilateral organisations nokia',
-                 'but he added nokia',  'that the suspension nokia', 'of payments to private nokia']
+    #phrases taken from Jane Eyre
+    my_list_2 = ['large face the under jaw', 'being much developed and very solid',
+                 'her brow was low', 'her chin large and prominent', 'mouth and nose sufficiently regular']
     
     for i in my_list_2:
         print(i)
-        print(get_chain_prob_smooth(i, dictonary_of_all_words,  total_answer, 
-                             number_of_words ))
+        
 
+        
+        
+        prob = get_chain_prob_smooth(i, dictonary_of_all_words,  total_answer, 
+                             number_of_words )
+        
+        print('probability: ', prob,  ' perpleksia: ', get_perpleksia(prob, len(i)))
  
 
 def get_bi_grams_simple():
@@ -347,13 +361,16 @@ def get_bi_grams_simple():
     list_of_books = ['berdaev.txt', 'game_of_biser.txt', 'head_of_douel.txt',
                      'humor.txt', 'kristi_dog_which_does_not_bark.txt', 
                      'nauchpop.txt', 'war_and_peace.txt']
-    position = 1
+    position = 0
     
     data = get_one_text(list_of_books[position])
     res = clean_text(data)
     lbg = get_bi_grams(res)
     ltg = get_tri_grams(res)
-    return lbg, tbg
+    
+    #lbg = get_most_bi_grams(lbg)
+    #ltg = get_most_bi_grams(ltg)
+    return lbg, ltg
 
 from copy import deepcopy
 
@@ -407,7 +424,7 @@ def generate_bred_tri(start_word, second_start_word, dict_of_tri_grams, number_o
         current2 = an
     return answer
 
-bred = generate_bred_tri(u'на', u'каждые', ltg, 100)
+bred = generate_bred_tri(u'глубину', u'эту', ltg, 100)
 
 
 start_word = u'он'
