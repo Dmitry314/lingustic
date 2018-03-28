@@ -314,7 +314,7 @@ def get_chain_prob_smooth(text, dict_of_all_words, dict_of_bi_grams, num_of_word
     
     for i in range(1, len(tmp)):
         
-        answer = answer * get_word2Iword1_smooth(tmp[i-1], tmp[i], dict_of_bi_grams, number_of_words)
+        answer = answer * get_word2Iword1_smooth(tmp[i-1], tmp[i], dict_of_bi_grams, num_of_words)
         
     return answer
 
